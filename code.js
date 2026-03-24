@@ -40,24 +40,34 @@ figma.ui.onmessage = async (msg) => {
   if (msg.type === 'APPLY') {
     let applied = 0;
     const errors = [];
+    const succeeded = [];
 
     for (const change of msg.changes) {
-      // Figma does not accept empty strings — skip clears
-      if (!change.value) continue;
-
       try {
         const v = await figma.variables.getVariableByIdAsync(change.id);
         if (!v) {
-          errors.push({ name: change.id, platform: change.platform, reason: 'Variable not found' });
+          errors.push({ id: change.id, name: change.id, platform: change.platform, reason: 'Variable not found' });
           continue;
         }
-        v.setVariableCodeSyntax(change.platform, change.value);
+
+        if (change.value === '') {
+          if (typeof v.removeVariableCodeSyntax === 'function') {
+            v.removeVariableCodeSyntax(change.platform);
+          } else {
+            errors.push({ id: change.id, name: v.name, platform: change.platform, reason: 'This version of Figma does not support removing syntax' });
+            continue;
+          }
+        } else {
+          v.setVariableCodeSyntax(change.platform, change.value);
+        }
+
+        succeeded.push({ id: change.id, platform: change.platform, value: change.value });
         applied++;
       } catch (err) {
-        errors.push({ name: change.id, platform: change.platform, reason: String(err) });
+        errors.push({ id: change.id, name: change.id, platform: change.platform, reason: String(err) });
       }
     }
 
-    figma.ui.postMessage({ type: 'DONE', count: applied, errors });
+    figma.ui.postMessage({ type: 'DONE', count: applied, errors, succeeded });
   }
 };

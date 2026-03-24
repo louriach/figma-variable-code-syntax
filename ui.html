@@ -6,21 +6,43 @@
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
   :root {
-    --bg: #ffffff;
-    --bg-surface: #f7f7f7;
-    --bg-raised: #efefef;
-    --bg-input: #ffffff;
-    --border: #e8e8e8;
-    --border-focus: #f97316;
-    --text: #111111;
-    --text-secondary: #555555;
-    --text-tertiary: #999999;
-    --accent: #f97316;
-    --accent-dim: #fff7ed;
-    --accent-hover: #ea6c0a;
-    --success: #16a34a;
-    --error: #dc2626;
-    --radius: 8px;
+    /* ── Backgrounds ── */
+    --bg:         #111807;
+    --bg-surface: #161d09;
+    --bg-raised:  #1c250b;
+    --bg-input:   #111807;
+
+    /* ── Borders ── */
+    --border:       #273410;
+    --border-focus: #5c8a24;
+
+    /* ── Text ── */
+    --text:           #9cb858;
+    --text-secondary: #617838;
+    --text-tertiary:  #3e5024;
+
+    /* ── Accent ── */
+    --accent:      #5c8a24;
+    --accent-dim:  #5c8a2418;
+    --accent-hover:#4e7620;
+    --accent-text: #e8f5d0;
+
+    /* ── Danger ── */
+    --danger:          var(--text-secondary);
+    --danger-bg:       transparent;
+    --danger-bg-hover: var(--bg-raised);
+    --danger-border:   var(--border);
+    --danger-hover:    var(--text);
+
+    /* ── Status ── */
+    --success: #4ade80;
+    --error:   #f87171;
+
+    /* ── Shadow ── */
+    --shadow: rgba(0,0,0,0.6);
+
+    /* ── Layout ── */
+    --radius:    8px;
     --radius-sm: 6px;
     --font: 'Inter', -apple-system, sans-serif;
     --mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
@@ -96,7 +118,7 @@
     outline: none;
     width: 100%;
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999999' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%233e5024' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 8px center;
     padding-right: 24px;
@@ -164,10 +186,10 @@
 
   .platform-btn {
     padding: 7px 0;
-    background: var(--bg-raised);
+    background: var(--bg);
     border: none;
     border-right: 1px solid var(--border);
-    color: var(--text-secondary);
+    color: var(--text-tertiary);
     font-family: var(--font);
     font-size: 11px;
     font-weight: 500;
@@ -184,20 +206,20 @@
   }
 
   .platform-btn:hover:not(.active) {
-    background: var(--bg-surface);
-    color: var(--text);
+    background: var(--bg-raised);
+    color: var(--text-secondary);
   }
 
   /* ── Mode tabs ── */
   .mode-tabs {
     display: flex;
-    gap: 0;
+    gap: 16px;
     margin-bottom: 10px;
     border-bottom: 1px solid var(--border);
   }
 
   .mode-tab {
-    padding: 4px 12px 5px;
+    padding: 4px 0 5px;
     border: none;
     background: none;
     color: var(--text-tertiary);
@@ -213,24 +235,43 @@
   }
 
   .mode-tab.active {
-    color: var(--text);
-    border-bottom-color: var(--text);
+    color: var(--accent);
+    border-bottom-color: var(--accent);
   }
 
-  .mode-tab:hover:not(.active) { color: var(--text-secondary); }
+  .mode-tab:hover:not(.active) { color: var(--text-tertiary); }
 
   /* ── Standard mode ── */
+  .preview-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+    min-height: 20px;
+  }
+
+  .preview-eg {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
   .standard-preview {
     font-family: var(--mono);
     font-size: 11px;
-    padding: 6px 8px;
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    margin-bottom: 6px;
+    color: var(--text-secondary);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    pointer-events: none;
+    user-select: none;
+    cursor: default;
+    flex: 1;
+    min-width: 0;
   }
 
   .preview-static  { color: var(--text-tertiary); }
@@ -240,11 +281,26 @@
   .affix-row {
     display: flex;
     gap: 6px;
-    align-items: center;
+    align-items: flex-end;
+  }
+
+  .affix-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+  }
+
+  .affix-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
   .affix-input {
-    flex: 1;
+    width: 100%;
     font-family: var(--mono);
     font-size: 11px;
     padding: 5px 8px;
@@ -284,7 +340,7 @@
   .bulk-input::placeholder { color: var(--text-tertiary); font-style: italic; font-family: var(--font); }
 
   .bulk-apply-btn {
-    padding: 7px 16px;
+    padding: 5px 12px;
     background: var(--bg-raised);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
@@ -308,14 +364,14 @@
     padding: 2px 6px;
     background: var(--accent-dim);
     color: var(--accent);
-    border: 1px solid #fed7aa;
+    border: 1px solid var(--border);
     border-radius: 3px;
     cursor: pointer;
     user-select: none;
     transition: all 0.1s;
   }
 
-  .token:hover { background: #ffedd5; border-color: var(--accent); }
+  .token:hover { background: var(--bg-raised); border-color: var(--accent); }
 
   /* ── Variable list ── */
   .var-list-header {
@@ -501,30 +557,30 @@
   }
 
   .reset-btn:not(:disabled) {
-    color: #dc2626;
-    border-color: #fecaca;
+    color: var(--danger);
+    border-color: var(--danger-border);
     cursor: pointer;
   }
 
   .reset-btn:not(:disabled):hover {
-    background: #fef2f2;
+    background: var(--danger-bg);
   }
 
   .clear-btn {
     padding: 6px 12px;
-    background: #fef2f2;
-    border: 1px solid #fecaca;
+    background: var(--danger-bg);
+    border: 1px solid var(--danger-border);
     border-radius: var(--radius-sm);
     font-family: var(--font);
     font-size: 11px;
     font-weight: 500;
-    color: #dc2626;
+    color: var(--danger);
     cursor: pointer;
     transition: all 0.1s;
     flex-shrink: 0;
   }
 
-  .clear-btn:hover { background: #fee2e2; color: #b91c1c; }
+  .clear-btn:hover { background: var(--danger-bg-hover); color: var(--danger-hover); }
   .clear-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
   .undo-btn {
@@ -555,7 +611,7 @@
   .apply-btn {
     padding: 6px 18px;
     background: var(--accent);
-    color: #431407;
+    color: var(--accent-text);
     border: none;
     border-radius: var(--radius-sm);
     font-family: var(--font);
@@ -587,7 +643,7 @@
     transition: opacity 0.2s, transform 0.2s;
     white-space: nowrap;
     z-index: 100;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    box-shadow: 0 4px 16px var(--shadow);
   }
 
   .toast.show {
@@ -597,6 +653,7 @@
 
   .toast.success { border-color: var(--success); }
   .toast.error   { border-color: var(--error); }
+
 </style>
 </head>
 <body>
@@ -615,7 +672,6 @@
 
 <!-- Bulk pattern -->
 <div class="bulk-bar">
-  <div class="bulk-label">Bulk pattern</div>
   <div class="platform-selector">
     <button class="platform-btn active" data-platform="WEB">Web</button>
     <button class="platform-btn" data-platform="iOS">iOS</button>
@@ -627,18 +683,27 @@
   </div>
   <!-- Standard panel -->
   <div id="standard-panel">
-    <div class="standard-preview" id="standard-preview"></div>
+    <div class="preview-row">
+      <span class="preview-eg">e.g.</span>
+      <div class="standard-preview" id="standard-preview"></div>
+    </div>
     <div class="affix-row">
-      <input class="affix-input" id="prefix-input" type="text" placeholder="Prefix">
-      <input class="affix-input" id="suffix-input" type="text" placeholder="Suffix">
-      <button class="bulk-apply-btn" id="bulk-apply-btn">Apply to filtered</button>
+      <div class="affix-field">
+        <span class="affix-label">Prefix</span>
+        <input class="affix-input" id="prefix-input" type="text" placeholder="e.g. brand-">
+      </div>
+      <div class="affix-field">
+        <span class="affix-label">Suffix</span>
+        <input class="affix-input" id="suffix-input" type="text" placeholder="e.g. -base">
+      </div>
+      <button class="bulk-apply-btn" id="bulk-apply-btn-standard" title="Fills all three platform columns with their standard formats">Generate</button>
     </div>
   </div>
   <!-- Custom panel -->
   <div id="custom-panel" class="hidden">
     <div class="bulk-row">
       <input class="bulk-input" id="bulk-input" type="text" placeholder="e.g.  var(--{kebab})  ·  Color.{pascal}  ·  R.color.{snake}">
-      <button class="bulk-apply-btn" id="bulk-apply-btn-custom">Apply to filtered</button>
+      <button class="bulk-apply-btn" id="bulk-apply-btn-custom" title="Fills the table with generated values — review before clicking Apply Changes">Generate</button>
     </div>
     <div class="tokens">
       <span class="token" data-token="{name}"   title="Full path: Colors/Primary/500">{name}</span>
@@ -954,6 +1019,8 @@ document.querySelectorAll('.platform-btn').forEach(btn => {
     document.querySelectorAll('.platform-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     updateStandardPreview();
+    // Standard mode: tabs only affect the preview, not which platform gets filled
+    // Custom mode: tab selects which platform the custom pattern targets
   });
 });
 
@@ -967,15 +1034,24 @@ document.querySelectorAll('.mode-tab').forEach(btn => {
   });
 });
 
+function debounce(fn, ms) {
+  let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+}
+const debouncedFill = debounce(() => { if (state.mode === 'standard') applyBulkPattern(); }, 250);
+
 document.getElementById('prefix-input').addEventListener('input', e => {
   state.prefix = e.target.value;
   updateStandardPreview();
+  debouncedFill();
 });
 
 document.getElementById('suffix-input').addEventListener('input', e => {
   state.suffix = e.target.value;
   updateStandardPreview();
+  debouncedFill();
 });
+
+document.getElementById('bulk-apply-btn-standard').addEventListener('click', applyBulkPattern);
 
 document.getElementById('search-input').addEventListener('input', e => {
   state.search = e.target.value;
@@ -1003,8 +1079,11 @@ function applyBulkPattern() {
   const vars = getFilteredVariables();
   if (!vars.length) return;
   if (state.mode === 'standard') {
+    // Fill all three platforms at once using their respective standard formats
     for (const v of vars) {
-      setEdit(v.id, state.platform, getStandardValue(v.name, v.resolvedType, state.platform, state.prefix, state.suffix));
+      for (const p of ['WEB', 'iOS', 'ANDROID']) {
+        setEdit(v.id, p, getStandardValue(v.name, v.resolvedType, p, state.prefix, state.suffix));
+      }
     }
   } else {
     const pattern = state.bulkPattern;
@@ -1016,7 +1095,6 @@ function applyBulkPattern() {
   renderList();
 }
 
-document.getElementById('bulk-apply-btn').addEventListener('click', applyBulkPattern);
 document.getElementById('bulk-apply-btn-custom').addEventListener('click', applyBulkPattern);
 
 // Inline edits via event delegation
@@ -1098,13 +1176,20 @@ window.onmessage = (event) => {
       }
     }
 
-    // Populate collection dropdown
+    // Populate collection dropdown (reset first to avoid duplicates on reload)
     const select = document.getElementById('collection-select');
+    const prevValue = select.value;
+    select.innerHTML = '<option value="all">All Collections</option>';
     for (const col of msg.collections) {
       const opt = document.createElement('option');
       opt.value = col.id;
       opt.textContent = col.name;
       select.appendChild(opt);
+    }
+    // Restore selection if it still exists
+    if ([...select.options].some(o => o.value === prevValue)) {
+      select.value = prevValue;
+      state.selectedCollectionId = prevValue;
     }
 
     renderList();
@@ -1114,22 +1199,22 @@ window.onmessage = (event) => {
   if (msg.type === 'DONE') {
     state.applying = false;
 
-    // Commit edits → originals, clear edits
-    for (const varId of Object.keys(state.edits)) {
-      if (!state.originals[varId]) state.originals[varId] = {};
-      for (const platform of Object.keys(state.edits[varId])) {
-        state.originals[varId][platform] = state.edits[varId][platform];
-      }
+    // Optimistically commit succeeded changes into originals
+    for (const s of (msg.succeeded || [])) {
+      if (!state.originals[s.id]) state.originals[s.id] = {};
+      state.originals[s.id][s.platform] = s.value;
     }
     state.edits = {};
 
     if (msg.errors && msg.errors.length > 0) {
-      showToast(`Updated ${msg.count}, ${msg.errors.length} failed — check console`, 'error');
-      msg.errors.forEach(e => console.warn(`[Variable Syntax] ${e.platform} on ${e.name}: ${e.reason}`));
+      const failReasons = [...new Set(msg.errors.map(e => e.reason))].join('; ');
+      showToast(`Updated ${msg.count}, ${msg.errors.length} failed: ${failReasons}`, 'error');
     } else {
       showToast(`✓ Updated ${msg.count} variable${msg.count !== 1 ? 's' : ''}`, 'success');
     }
+
     renderList();
+    updateStatus();
   }
 
   if (msg.type === 'ERROR') {
@@ -1150,6 +1235,7 @@ function requestLoad() {
 }
 
 document.getElementById('refresh-btn').addEventListener('click', requestLoad);
+
 
 requestLoad();
 </script>
