@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #1a1a1a;
+    --bg-surface: #242424;
+    --bg-raised: #2e2e2e;
+    --bg-input: #1a1a1a;
+    --border: #383838;
+    --border-focus: #f97316;
+    --text: #f0f0f0;
+    --text-secondary: #a0a0a0;
+    --text-tertiary: #606060;
+    --accent: #f97316;
+    --accent-dim: #f9731618;
+    --accent-hover: #fb923c;
+    --success: #4ade80;
+    --error: #f87171;
+    --radius: 6px;
+    --radius-sm: 4px;
+    --font: 'Inter', -apple-system, sans-serif;
+    --mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; }
+
+  body {
+    font-family: var(--font);
+    font-size: 11px;
+    color: var(--text);
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    line-height: 1.5;
+  }
+
+  /* ── Toolbar ── */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--bg-surface);
+  }
+
+  .toolbar-left { flex: 1; min-width: 0; }
+
+  select {
+    font-family: var(--font);
+    font-size: 11px;
+    color: var(--text);
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 5px 8px;
+    cursor: pointer;
+    outline: none;
+    width: 100%;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23606060' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 24px;
+  }
+
+  select:focus { border-color: var(--border-focus); }
+
+  /* ── Platform tabs ── */
+  .platform-tabs {
+    display: flex;
+    background: var(--bg-raised);
+    border-radius: var(--radius-sm);
+    padding: 2px;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+
+  .platform-tab {
+    padding: 4px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 500;
+    border: none;
+    background: none;
+    transition: all 0.15s;
+    position: relative;
+  }
+
+  .platform-tab.active {
+    background: var(--accent-dim);
+    color: var(--accent);
+    border: 1px solid #f9731633;
+  }
+
+  .platform-tab .dot {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: none;
+  }
+
+  .platform-tab.has-changes .dot { display: block; }
+  .platform-tab:hover:not(.active) { color: var(--text); }
+
+  /* ── Filter bar ── */
+  .filter-bar {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .search-wrap { position: relative; }
+
+  .search-icon {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-tertiary);
+    pointer-events: none;
+  }
+
+  .search-input {
+    width: 100%;
+    font-family: var(--font);
+    font-size: 11px;
+    padding: 6px 8px 6px 28px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    outline: none;
+    background: var(--bg-input);
+    color: var(--text);
+  }
+
+  .search-input:focus { border-color: var(--border-focus); }
+  .search-input::placeholder { color: var(--text-tertiary); }
+
+  /* ── Bulk pattern ── */
+  .bulk-bar {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--bg-surface);
+  }
+
+  .bulk-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-tertiary);
+    margin-bottom: 6px;
+  }
+
+  .bulk-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .bulk-input {
+    flex: 1;
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    outline: none;
+    background: var(--bg-input);
+    color: var(--accent);
+  }
+
+  .bulk-input:focus { border-color: var(--border-focus); }
+  .bulk-input::placeholder { color: var(--text-tertiary); font-style: italic; font-family: var(--font); }
+
+  .bulk-apply-btn {
+    padding: 5px 12px;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    transition: all 0.1s;
+  }
+
+  .bulk-apply-btn:hover { border-color: var(--border-focus); color: var(--accent); }
+
+  /* ── Token chips ── */
+  .tokens { display: flex; flex-wrap: wrap; gap: 4px; }
+
+  .token {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 6px;
+    background: var(--accent-dim);
+    color: var(--accent);
+    border: 1px solid #f9731633;
+    border-radius: 3px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.1s;
+  }
+
+  .token:hover { background: #f9731628; border-color: var(--accent); }
+
+  /* ── Variable list ── */
+  .var-list-header {
+    display: grid;
+    grid-template-columns: 1fr 72px 1fr;
+    gap: 8px;
+    padding: 5px 12px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-tertiary);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--bg-surface);
+  }
+
+  .var-list {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .var-list::-webkit-scrollbar { width: 4px; }
+  .var-list::-webkit-scrollbar-track { background: transparent; }
+  .var-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .var-row {
+    display: grid;
+    grid-template-columns: 1fr 72px 1fr;
+    gap: 8px;
+    padding: 3px 12px;
+    align-items: center;
+    border-bottom: 1px solid var(--border)88;
+    min-height: 30px;
+    transition: background 0.1s;
+  }
+
+  .var-row:hover { background: var(--bg-surface); }
+
+  .var-name {
+    font-size: 11px;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .var-name-path { color: var(--text-tertiary); }
+
+  /* ── Type badges ── */
+  .type-badge {
+    display: inline-block;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .type-COLOR    { background: #f43f5e22; color: #fb7185; border: 1px solid #f43f5e33; }
+  .type-FLOAT    { background: #22c55e22; color: #4ade80; border: 1px solid #22c55e33; }
+  .type-STRING   { background: #f59e0b22; color: #fbbf24; border: 1px solid #f59e0b33; }
+  .type-BOOLEAN  { background: #3b82f622; color: #60a5fa; border: 1px solid #3b82f633; }
+
+  /* ── Syntax input ── */
+  .syntax-input {
+    width: 100%;
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 4px 6px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    outline: none;
+    background: transparent;
+    color: var(--text-secondary);
+    transition: all 0.1s;
+  }
+
+  .syntax-input:hover {
+    border-color: var(--border);
+    background: var(--bg-input);
+    color: var(--text);
+  }
+
+  .syntax-input:focus {
+    border-color: var(--border-focus);
+    background: var(--bg-input);
+    color: var(--text);
+  }
+
+  .syntax-input.dirty { color: var(--accent); }
+  .syntax-input::placeholder { color: var(--text-tertiary); font-style: italic; font-family: var(--font); }
+
+  /* ── Empty / loading ── */
+  .empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-tertiary);
+    gap: 10px;
+    padding: 40px;
+    text-align: center;
+    height: 100%;
+  }
+
+  .loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 100%;
+    color: var(--text-tertiary);
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .spinner {
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  /* ── Status bar ── */
+  .status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--bg-surface);
+    gap: 12px;
+  }
+
+  .status-text {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .status-text strong { color: var(--text-secondary); }
+  .status-text .changes { color: var(--accent); font-weight: 500; }
+
+  .apply-btn {
+    padding: 6px 18px;
+    background: var(--accent);
+    color: #1a0a00;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .apply-btn:hover:not(:disabled) { background: var(--accent-hover); }
+  .apply-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed;
+    bottom: 52px;
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 7px 14px;
+    border-radius: var(--radius);
+    font-size: 11px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    white-space: nowrap;
+    z-index: 100;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .toast.success { border-color: var(--success); }
+  .toast.error   { border-color: var(--error); }
+</style>
+</head>
+<body>
+
+<!-- Toolbar -->
+<div class="toolbar">
+  <div class="toolbar-left">
+    <select id="collection-select">
+      <option value="all">All Collections</option>
+    </select>
+  </div>
+  <div class="platform-tabs">
+    <button class="platform-tab active" data-platform="WEB">Web<span class="dot"></span></button>
+    <button class="platform-tab" data-platform="IOS">iOS<span class="dot"></span></button>
+    <button class="platform-tab" data-platform="ANDROID">Android<span class="dot"></span></button>
+  </div>
+</div>
+
+<!-- Filter -->
+<div class="filter-bar">
+  <div class="search-wrap">
+    <svg class="search-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+      <circle cx="5" cy="5" r="3.5" stroke="currentColor" stroke-width="1.3"/>
+      <line x1="7.7" y1="7.7" x2="10.5" y2="10.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+    </svg>
+    <input class="search-input" id="search-input" type="text" placeholder="Filter variables by name or group…">
+  </div>
+</div>
+
+<!-- Bulk pattern -->
+<div class="bulk-bar">
+  <div class="bulk-label">Bulk pattern</div>
+  <div class="bulk-row">
+    <input class="bulk-input" id="bulk-input" type="text" placeholder="e.g.  var(--{kebab})  ·  Color.{pascal}  ·  R.color.{snake}">
+    <button class="bulk-apply-btn" id="bulk-apply-btn">Apply to filtered</button>
+  </div>
+  <div class="tokens">
+    <span class="token" data-token="{name}"    title="Full path: Colors/Primary/500">{name}</span>
+    <span class="token" data-token="{kebab}"   title="kebab-case: colors-primary-500">{kebab}</span>
+    <span class="token" data-token="{camel}"   title="camelCase: colorsPrimary500">{camel}</span>
+    <span class="token" data-token="{pascal}"  title="PascalCase: ColorsPrimary500">{pascal}</span>
+    <span class="token" data-token="{snake}"   title="snake_case: colors_primary_500">{snake}</span>
+    <span class="token" data-token="{UPPER}"   title="UPPER_CASE: COLORS_PRIMARY_500">{UPPER}</span>
+    <span class="token" data-token="{last}"    title="Last segment only: 500">{last}</span>
+  </div>
+</div>
+
+<!-- List header -->
+<div class="var-list-header">
+  <span>Name</span>
+  <span>Type</span>
+  <span id="platform-col-header">Web Syntax</span>
+</div>
+
+<!-- Variable list -->
+<div id="var-list" class="var-list">
+  <div class="loading"><div class="spinner"></div> Loading variables…</div>
+</div>
+
+<!-- Status bar -->
+<div class="status-bar">
+  <span class="status-text" id="status-text">—</span>
+  <button class="apply-btn" id="apply-btn" disabled>Apply Changes</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+
+const state = {
+  collections: [],
+  selectedCollectionId: 'all',
+  platform: 'WEB',
+  search: '',
+  bulkPattern: '',
+  // edits[varId][platform] = pending value
+  edits: {},
+  // originals[varId][platform] = loaded value from Figma
+  originals: {},
+  loading: true,
+  applying: false,
+};
+
+// ── Name transformers ──────────────────────────────────────────────────────
+
+function segments(name) {
+  return name.split('/').map(s => s.trim()).filter(Boolean);
+}
+
+function toKebab(name)  { return segments(name).map(s => s.toLowerCase().replace(/\s+/g, '-')).join('-'); }
+function toSnake(name)  { return segments(name).map(s => s.toLowerCase().replace(/\s+/g, '_')).join('_'); }
+function toUpper(name)  { return segments(name).map(s => s.toUpperCase().replace(/\s+/g, '_')).join('_'); }
+function toLast(name)   { const s = segments(name); return s[s.length - 1] || name; }
+
+function toCamel(name) {
+  return segments(name).map((s, i) => {
+    const w = s.replace(/\s+/g, '');
+    return i === 0 ? w.charAt(0).toLowerCase() + w.slice(1) : w.charAt(0).toUpperCase() + w.slice(1);
+  }).join('');
+}
+
+function toPascal(name) {
+  return segments(name).map(s => {
+    const w = s.replace(/\s+/g, '');
+    return w.charAt(0).toUpperCase() + w.slice(1);
+  }).join('');
+}
+
+function applyPattern(varName, pattern) {
+  if (!pattern) return '';
+  const map = {
+    name:   varName,
+    kebab:  toKebab(varName),
+    snake:  toSnake(varName),
+    camel:  toCamel(varName),
+    pascal: toPascal(varName),
+    UPPER:  toUpper(varName),
+    last:   toLast(varName),
+  };
+  return pattern.replace(/\{(\w+)\}/g, (m, t) => t in map ? map[t] : m);
+}
+
+// ── State helpers ──────────────────────────────────────────────────────────
+
+function getOriginal(varId, platform) {
+  return (state.originals[varId] && state.originals[varId][platform]) || '';
+}
+
+function getCurrentValue(varId, platform) {
+  const e = state.edits[varId];
+  if (e && platform in e) return e[platform];
+  return getOriginal(varId, platform);
+}
+
+function isDirty(varId, platform) {
+  const e = state.edits[varId];
+  if (!e || !(platform in e)) return false;
+  return e[platform] !== getOriginal(varId, platform);
+}
+
+function setEdit(varId, platform, value) {
+  if (!state.edits[varId]) state.edits[varId] = {};
+  state.edits[varId][platform] = value;
+}
+
+function getPlatformDirtyCount(platform) {
+  let n = 0;
+  for (const varId of Object.keys(state.edits)) {
+    if (isDirty(varId, platform)) n++;
+  }
+  return n;
+}
+
+function getTotalDirtyCount() {
+  let n = 0;
+  for (const varId of Object.keys(state.edits)) {
+    for (const p of ['WEB', 'IOS', 'ANDROID']) {
+      if (isDirty(varId, p)) n++;
+    }
+  }
+  return n;
+}
+
+function getFilteredVariables() {
+  let vars = [];
+  for (const col of state.collections) {
+    if (state.selectedCollectionId !== 'all' && col.id !== state.selectedCollectionId) continue;
+    vars.push(...col.variables.map(v => ({ ...v, collectionName: col.name })));
+  }
+  if (state.search) {
+    const q = state.search.toLowerCase();
+    vars = vars.filter(v => v.name.toLowerCase().includes(q));
+  }
+  return vars;
+}
+
+// ── Rendering ─────────────────────────────────────────────────────────────
+
+function esc(str) {
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function renderList() {
+  const list = document.getElementById('var-list');
+  if (state.loading) {
+    list.innerHTML = '<div class="loading"><div class="spinner"></div> Loading variables…</div>';
+    return;
+  }
+
+  const vars = getFilteredVariables();
+  if (vars.length === 0) {
+    list.innerHTML = `<div class="empty-state">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" opacity="0.4">
+        <rect x="3" y="7" width="22" height="3" rx="1.5" fill="currentColor"/>
+        <rect x="3" y="13" width="14" height="3" rx="1.5" fill="currentColor"/>
+        <rect x="3" y="19" width="18" height="3" rx="1.5" fill="currentColor"/>
+      </svg>
+      <div>No variables match your filter</div>
+    </div>`;
+    return;
+  }
+
+  let html = '';
+  for (const v of vars) {
+    const val = getCurrentValue(v.id, state.platform);
+    const dirty = isDirty(v.id, state.platform);
+    const segs = v.name.split('/');
+    const last = segs.pop();
+    const prefix = segs.length ? segs.join('/') + '/' : '';
+
+    html += `<div class="var-row" data-id="${esc(v.id)}">
+      <div class="var-name" title="${esc(v.name)}">
+        <span class="var-name-path">${esc(prefix)}</span>${esc(last)}
+      </div>
+      <div><span class="type-badge type-${esc(v.resolvedType)}">${esc(v.resolvedType)}</span></div>
+      <div>
+        <input
+          class="syntax-input${dirty ? ' dirty' : ''}"
+          type="text"
+          value="${esc(val)}"
+          placeholder="Not set"
+          data-id="${esc(v.id)}"
+        >
+      </div>
+    </div>`;
+  }
+
+  list.innerHTML = html;
+  updateStatus();
+}
+
+function updateStatus() {
+  const vars = getFilteredVariables();
+  const total = getTotalDirtyCount();
+  const statusEl = document.getElementById('status-text');
+  const applyBtn = document.getElementById('apply-btn');
+
+  let statusHtml = `<strong>${vars.length}</strong> variable${vars.length !== 1 ? 's' : ''}`;
+  if (total > 0) {
+    statusHtml += ` · <span class="changes">${total} unsaved change${total !== 1 ? 's' : ''}</span>`;
+  }
+  statusEl.innerHTML = statusHtml;
+
+  applyBtn.disabled = total === 0 || state.applying;
+  applyBtn.textContent = state.applying ? 'Applying…' : 'Apply Changes';
+
+  // Update platform tab dots
+  document.querySelectorAll('.platform-tab').forEach(tab => {
+    const p = tab.dataset.platform;
+    tab.classList.toggle('has-changes', getPlatformDirtyCount(p) > 0);
+  });
+}
+
+function updatePlatformHeader() {
+  const labels = { WEB: 'Web Syntax', IOS: 'iOS Syntax', ANDROID: 'Android Syntax' };
+  document.getElementById('platform-col-header').textContent = labels[state.platform];
+}
+
+function showToast(msg, type = '') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `toast show${type ? ' ' + type : ''}`;
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.className = 'toast', 2500);
+}
+
+// ── Events ────────────────────────────────────────────────────────────────
+
+document.getElementById('collection-select').addEventListener('change', e => {
+  state.selectedCollectionId = e.target.value;
+  renderList();
+});
+
+document.querySelectorAll('.platform-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    state.platform = btn.dataset.platform;
+    document.querySelectorAll('.platform-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    updatePlatformHeader();
+    renderList();
+  });
+});
+
+document.getElementById('search-input').addEventListener('input', e => {
+  state.search = e.target.value;
+  renderList();
+});
+
+// Click token → insert at cursor in bulk input
+document.querySelectorAll('.token').forEach(chip => {
+  chip.addEventListener('click', () => {
+    const input = document.getElementById('bulk-input');
+    const token = chip.dataset.token;
+    const s = input.selectionStart, e = input.selectionEnd;
+    input.value = input.value.slice(0, s) + token + input.value.slice(e);
+    state.bulkPattern = input.value;
+    input.focus();
+    input.setSelectionRange(s + token.length, s + token.length);
+  });
+});
+
+document.getElementById('bulk-input').addEventListener('input', e => {
+  state.bulkPattern = e.target.value;
+});
+
+document.getElementById('bulk-apply-btn').addEventListener('click', () => {
+  if (!state.bulkPattern) return;
+  for (const v of getFilteredVariables()) {
+    setEdit(v.id, state.platform, applyPattern(v.name, state.bulkPattern));
+  }
+  renderList();
+});
+
+// Inline edits via event delegation
+document.getElementById('var-list').addEventListener('input', e => {
+  if (!e.target.classList.contains('syntax-input')) return;
+  const varId = e.target.dataset.id;
+  setEdit(varId, state.platform, e.target.value);
+  e.target.classList.toggle('dirty', isDirty(varId, state.platform));
+  updateStatus();
+});
+
+document.getElementById('apply-btn').addEventListener('click', () => {
+  const changes = [];
+  for (const varId of Object.keys(state.edits)) {
+    for (const platform of ['WEB', 'IOS', 'ANDROID']) {
+      if (!isDirty(varId, platform)) continue;
+      changes.push({ id: varId, platform, value: state.edits[varId][platform] });
+    }
+  }
+  if (!changes.length) return;
+
+  state.applying = true;
+  updateStatus();
+  parent.postMessage({ pluginMessage: { type: 'APPLY', changes } }, '*');
+});
+
+// ── Plugin messages ────────────────────────────────────────────────────────
+
+window.onmessage = (event) => {
+  const msg = event.data.pluginMessage;
+  if (!msg) return;
+
+  if (msg.type === 'DATA') {
+    state.collections = msg.collections;
+    state.loading = false;
+
+    // Build originals map
+    for (const col of msg.collections) {
+      for (const v of col.variables) {
+        state.originals[v.id] = {
+          WEB:     (v.codeSyntax && v.codeSyntax.WEB)     || '',
+          IOS:     (v.codeSyntax && v.codeSyntax.IOS)     || '',
+          ANDROID: (v.codeSyntax && v.codeSyntax.ANDROID) || '',
+        };
+      }
+    }
+
+    // Populate collection dropdown
+    const select = document.getElementById('collection-select');
+    for (const col of msg.collections) {
+      const opt = document.createElement('option');
+      opt.value = col.id;
+      opt.textContent = col.name;
+      select.appendChild(opt);
+    }
+
+    renderList();
+  }
+
+  if (msg.type === 'DONE') {
+    state.applying = false;
+
+    // Commit edits → originals, clear edits
+    for (const varId of Object.keys(state.edits)) {
+      if (!state.originals[varId]) state.originals[varId] = {};
+      for (const platform of Object.keys(state.edits[varId])) {
+        state.originals[varId][platform] = state.edits[varId][platform];
+      }
+    }
+    state.edits = {};
+
+    showToast(`✓ Updated ${msg.count} variable${msg.count !== 1 ? 's' : ''}`, 'success');
+    renderList();
+  }
+
+  if (msg.type === 'ERROR') {
+    state.applying = false;
+    updateStatus();
+    showToast(`Error: ${msg.message}`, 'error');
+  }
+};
+
+// ── Init ───────────────────────────────────────────────────────────────────
+
+parent.postMessage({ pluginMessage: { type: 'INIT' } }, '*');
+</script>
+</body>
+</html>
