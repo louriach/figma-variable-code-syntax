@@ -713,32 +713,39 @@ const state = {
 
 // ── Standard conventions ───────────────────────────────────────────────────
 
-const STANDARDS = {
-  WEB:     { before: 'var(--', token: 'kebab', after: ')' },
-  iOS:     { before: 'Color.', token: 'camel', after: '' },
-  ANDROID: { before: 'R.color.', token: 'snake', after: '' },
-};
-
 const TOKEN_FNS = { kebab: toKebab, camel: toCamel, snake: toSnake };
+
+// Namespace per platform per type — only used in standard mode
+const STANDARD_NS = {
+  WEB:     { COLOR: 'var(--', FLOAT: 'var(--', BOOLEAN: 'var(--', STRING: 'var(--' },
+  iOS:     { COLOR: 'Color.', FLOAT: '',        BOOLEAN: '',        STRING: ''       },
+  ANDROID: { COLOR: 'R.color.', FLOAT: 'R.dimen.', BOOLEAN: 'R.bool.', STRING: 'R.string.' },
+};
+const STANDARD_SUFFIX = { WEB: ')', iOS: '', ANDROID: '' };
+const STANDARD_TOKEN  = { WEB: 'kebab', iOS: 'camel', ANDROID: 'snake' };
+
+function getStandardValue(varName, varType, platform, prefix, suffix) {
+  const type   = varType || 'STRING';
+  const ns     = (STANDARD_NS[platform]?.[type]) ?? '';
+  const token  = STANDARD_TOKEN[platform];
+  const after  = STANDARD_SUFFIX[platform];
+  const name   = TOKEN_FNS[token](varName);
+  return `${ns}${prefix}${name}${suffix}${after}`;
+}
 
 function getEffectivePattern() {
   if (state.mode === 'custom') return state.bulkPattern;
-  const std = STANDARDS[state.platform];
-  return `${std.before}${state.prefix}{${std.token}}${state.suffix}${std.after}`;
+  return null; // standard mode uses getStandardValue per-variable
 }
 
 function updateStandardPreview() {
   const el = document.getElementById('standard-preview');
   if (!el) return;
-  const std = STANDARDS[state.platform];
-  const example = getFilteredVariables()[0]?.name || 'token-name';
-  const tokenValue = TOKEN_FNS[std.token](example);
-  el.innerHTML =
-    `<span class="preview-static">${esc(std.before)}</span>` +
-    (state.prefix ? `<span class="preview-affix">${esc(state.prefix)}</span>` : '') +
-    `<span class="preview-token">${esc(tokenValue)}</span>` +
-    (state.suffix ? `<span class="preview-affix">${esc(state.suffix)}</span>` : '') +
-    (std.after ? `<span class="preview-static">${esc(std.after)}</span>` : '');
+  const firstVar = getFilteredVariables()[0];
+  const exampleName = firstVar?.name || 'token-name';
+  const exampleType = firstVar?.resolvedType || 'COLOR';
+  const value = getStandardValue(exampleName, exampleType, state.platform, state.prefix, state.suffix);
+  el.innerHTML = `<span class="preview-token">${esc(value)}</span>`;
 }
 
 // ── Name transformers ──────────────────────────────────────────────────────
@@ -993,10 +1000,18 @@ document.getElementById('bulk-input').addEventListener('input', e => {
 });
 
 function applyBulkPattern() {
-  const pattern = getEffectivePattern();
-  if (!pattern) return;
-  for (const v of getFilteredVariables()) {
-    setEdit(v.id, state.platform, applyPattern(v.name, pattern));
+  const vars = getFilteredVariables();
+  if (!vars.length) return;
+  if (state.mode === 'standard') {
+    for (const v of vars) {
+      setEdit(v.id, state.platform, getStandardValue(v.name, v.resolvedType, state.platform, state.prefix, state.suffix));
+    }
+  } else {
+    const pattern = state.bulkPattern;
+    if (!pattern) return;
+    for (const v of vars) {
+      setEdit(v.id, state.platform, applyPattern(v.name, pattern));
+    }
   }
   renderList();
 }
