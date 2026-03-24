@@ -1,8 +1,12 @@
 {
   "name": "Variable Code Syntax",
-  "id": "variable-code-syntax-editor",
+  "id": "1618411983962204133",
   "api": "1.0.0",
   "main": "code.js",
   "ui": "ui.html",
-  "editorType": ["figma"]
+  "editorType": ["figma"],
+  "documentAccess": "dynamic-page",
+  "networkAccess": {
+    "allowedDomains": ["none"]
+  }
 }
