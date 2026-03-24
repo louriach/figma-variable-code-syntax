@@ -6,22 +6,22 @@
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
   :root {
-    --bg: #1a1a1a;
-    --bg-surface: #242424;
-    --bg-raised: #2e2e2e;
-    --bg-input: #1a1a1a;
-    --border: #383838;
+    --bg: #ffffff;
+    --bg-surface: #f7f7f7;
+    --bg-raised: #efefef;
+    --bg-input: #ffffff;
+    --border: #e8e8e8;
     --border-focus: #f97316;
-    --text: #f0f0f0;
-    --text-secondary: #a0a0a0;
-    --text-tertiary: #606060;
+    --text: #111111;
+    --text-secondary: #555555;
+    --text-tertiary: #999999;
     --accent: #f97316;
-    --accent-dim: #f9731618;
-    --accent-hover: #fb923c;
-    --success: #4ade80;
-    --error: #f87171;
-    --radius: 6px;
-    --radius-sm: 4px;
+    --accent-dim: #fff7ed;
+    --accent-hover: #ea6c0a;
+    --success: #16a34a;
+    --error: #dc2626;
+    --radius: 8px;
+    --radius-sm: 6px;
     --font: 'Inter', -apple-system, sans-serif;
     --mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
   }
@@ -44,13 +44,45 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 12px;
+    padding: 12px 16px;
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
     background: var(--bg-surface);
   }
 
   .toolbar-left { flex: 1; min-width: 0; }
+
+  .refresh-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    color: var(--text-tertiary);
+    cursor: pointer;
+    transition: all 0.1s;
+    flex-shrink: 0;
+    padding: 0;
+  }
+
+  .refresh-btn svg { width: 14px; height: 14px; }
+
+  .refresh-btn:hover {
+    background: var(--bg-raised);
+    border-color: var(--border);
+    color: var(--text);
+  }
+
+  .refresh-btn.spinning svg {
+    animation: spin 0.6s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
 
   select {
     font-family: var(--font);
@@ -64,7 +96,7 @@
     outline: none;
     width: 100%;
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23606060' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999999' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 8px center;
     padding-right: 24px;
@@ -72,62 +104,18 @@
 
   select:focus { border-color: var(--border-focus); }
 
-  /* ── Platform tabs ── */
-  .platform-tabs {
-    display: flex;
-    background: var(--bg-raised);
-    border-radius: var(--radius-sm);
-    padding: 2px;
-    gap: 2px;
-    flex-shrink: 0;
-  }
-
-  .platform-tab {
-    padding: 4px 12px;
-    border-radius: 3px;
-    cursor: pointer;
-    color: var(--text-secondary);
-    font-family: var(--font);
-    font-size: 11px;
-    font-weight: 500;
-    border: none;
-    background: none;
-    transition: all 0.15s;
-    position: relative;
-  }
-
-  .platform-tab.active {
-    background: var(--accent-dim);
-    color: var(--accent);
-    border: 1px solid #f9731633;
-  }
-
-  .platform-tab .dot {
-    position: absolute;
-    top: 3px;
-    right: 3px;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: var(--accent);
-    display: none;
-  }
-
-  .platform-tab.has-changes .dot { display: block; }
-  .platform-tab:hover:not(.active) { color: var(--text); }
 
   /* ── Filter bar ── */
-  .filter-bar {
-    padding: 8px 12px;
-    border-bottom: 1px solid var(--border);
+  .table-search-row {
+    position: relative;
     flex-shrink: 0;
+    border-bottom: 1px solid var(--border);
+    border-top: 1px solid var(--border);
   }
-
-  .search-wrap { position: relative; }
 
   .search-icon {
     position: absolute;
-    left: 8px;
+    left: 14px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--text-tertiary);
@@ -138,7 +126,128 @@
     width: 100%;
     font-family: var(--font);
     font-size: 11px;
-    padding: 6px 8px 6px 28px;
+    padding: 9px 12px 9px 34px;
+    border: none;
+    outline: none;
+    background: var(--bg-surface);
+    color: var(--text);
+    box-sizing: border-box;
+  }
+
+  .search-input::placeholder { color: var(--text-tertiary); }
+
+  /* ── Bulk pattern ── */
+  .bulk-bar {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--bg-surface);
+  }
+
+  .bulk-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    margin-bottom: 10px;
+  }
+
+  /* ── Platform selector ── */
+  .platform-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    margin-bottom: 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .platform-btn {
+    padding: 7px 0;
+    background: var(--bg-raised);
+    border: none;
+    border-right: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.1s;
+    text-align: center;
+  }
+
+  .platform-btn:last-child { border-right: none; }
+
+  .platform-btn.active {
+    background: var(--accent-dim);
+    color: var(--accent);
+  }
+
+  .platform-btn:hover:not(.active) {
+    background: var(--bg-surface);
+    color: var(--text);
+  }
+
+  /* ── Mode tabs ── */
+  .mode-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mode-tab {
+    padding: 4px 12px 5px;
+    border: none;
+    background: none;
+    color: var(--text-tertiary);
+    font-family: var(--font);
+    font-size: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.1s;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .mode-tab.active {
+    color: var(--text);
+    border-bottom-color: var(--text);
+  }
+
+  .mode-tab:hover:not(.active) { color: var(--text-secondary); }
+
+  /* ── Standard mode ── */
+  .standard-preview {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 6px 8px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .preview-static  { color: var(--text-tertiary); }
+  .preview-token   { color: var(--accent); }
+  .preview-affix   { color: var(--text-secondary); }
+
+  .affix-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .affix-input {
+    flex: 1;
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 8px;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     outline: none;
@@ -146,25 +255,11 @@
     color: var(--text);
   }
 
-  .search-input:focus { border-color: var(--border-focus); }
-  .search-input::placeholder { color: var(--text-tertiary); }
+  .affix-input:focus { border-color: var(--border-focus); }
+  .affix-input::placeholder { color: var(--text-tertiary); font-style: italic; font-family: var(--font); }
 
-  /* ── Bulk pattern ── */
-  .bulk-bar {
-    padding: 8px 12px;
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-    background: var(--bg-surface);
-  }
+  .hidden { display: none; }
 
-  .bulk-label {
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-tertiary);
-    margin-bottom: 6px;
-  }
 
   .bulk-row {
     display: flex;
@@ -189,7 +284,7 @@
   .bulk-input::placeholder { color: var(--text-tertiary); font-style: italic; font-family: var(--font); }
 
   .bulk-apply-btn {
-    padding: 5px 12px;
+    padding: 7px 16px;
     background: var(--bg-raised);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
@@ -213,25 +308,25 @@
     padding: 2px 6px;
     background: var(--accent-dim);
     color: var(--accent);
-    border: 1px solid #f9731633;
+    border: 1px solid #fed7aa;
     border-radius: 3px;
     cursor: pointer;
     user-select: none;
     transition: all 0.1s;
   }
 
-  .token:hover { background: #f9731628; border-color: var(--accent); }
+  .token:hover { background: #ffedd5; border-color: var(--accent); }
 
   /* ── Variable list ── */
   .var-list-header {
     display: grid;
-    grid-template-columns: 1fr 72px 1fr;
-    gap: 8px;
-    padding: 5px 12px;
+    grid-template-columns: 58px 1fr 1fr 1fr 1fr;
+    gap: 6px;
+    padding: 7px 16px;
     font-size: 10px;
-    font-weight: 600;
+    font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.05em;
     color: var(--text-tertiary);
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
@@ -251,16 +346,16 @@
 
   .var-row {
     display: grid;
-    grid-template-columns: 1fr 72px 1fr;
-    gap: 8px;
-    padding: 3px 12px;
+    grid-template-columns: 58px 1fr 1fr 1fr 1fr;
+    gap: 6px;
+    padding: 5px 16px;
     align-items: center;
     border-bottom: 1px solid var(--border)88;
     min-height: 30px;
     transition: background 0.1s;
   }
 
-  .var-row:hover { background: var(--bg-surface); }
+  .var-row:nth-child(even) { background: var(--bg-surface); }
 
   .var-name {
     font-size: 11px;
@@ -274,19 +369,26 @@
 
   /* ── Type badges ── */
   .type-badge {
-    display: inline-block;
-    padding: 1px 5px;
-    border-radius: 3px;
-    font-size: 9px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    flex-shrink: 0;
   }
 
-  .type-COLOR    { background: #f43f5e22; color: #fb7185; border: 1px solid #f43f5e33; }
-  .type-FLOAT    { background: #22c55e22; color: #4ade80; border: 1px solid #22c55e33; }
-  .type-STRING   { background: #f59e0b22; color: #fbbf24; border: 1px solid #f59e0b33; }
-  .type-BOOLEAN  { background: #3b82f622; color: #60a5fa; border: 1px solid #3b82f633; }
+  .type-badge svg {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+  }
+
+  .type-COLOR, .type-FLOAT, .type-STRING, .type-BOOLEAN {
+    background: var(--bg-raised);
+    color: var(--text-tertiary);
+    border: 1px solid var(--border);
+  }
 
   /* ── Syntax input ── */
   .syntax-input {
@@ -358,7 +460,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 12px;
+    padding: 12px 16px;
     border-top: 1px solid var(--border);
     flex-shrink: 0;
     background: var(--bg-surface);
@@ -377,10 +479,83 @@
   .status-text strong { color: var(--text-secondary); }
   .status-text .changes { color: var(--accent); font-weight: 500; }
 
+  .status-left, .status-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .reset-btn {
+    padding: 6px 12px;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    cursor: default;
+    transition: all 0.1s;
+    flex-shrink: 0;
+  }
+
+  .reset-btn:not(:disabled) {
+    color: #dc2626;
+    border-color: #fecaca;
+    cursor: pointer;
+  }
+
+  .reset-btn:not(:disabled):hover {
+    background: #fef2f2;
+  }
+
+  .clear-btn {
+    padding: 6px 12px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: var(--radius-sm);
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 500;
+    color: #dc2626;
+    cursor: pointer;
+    transition: all 0.1s;
+    flex-shrink: 0;
+  }
+
+  .clear-btn:hover { background: #fee2e2; color: #b91c1c; }
+  .clear-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .undo-btn {
+    padding: 6px 12px;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    cursor: default;
+    transition: all 0.1s;
+    flex-shrink: 0;
+  }
+
+  .undo-btn:not(:disabled) {
+    color: var(--text-secondary);
+    border-color: var(--border);
+    cursor: pointer;
+  }
+
+  .undo-btn:not(:disabled):hover {
+    background: var(--bg-raised);
+    color: var(--text);
+  }
+
   .apply-btn {
     padding: 6px 18px;
     background: var(--accent);
-    color: #1a0a00;
+    color: #431407;
     border: none;
     border-radius: var(--radius-sm);
     font-family: var(--font);
@@ -433,47 +608,66 @@
       <option value="all">All Collections</option>
     </select>
   </div>
-  <div class="platform-tabs">
-    <button class="platform-tab active" data-platform="WEB">Web<span class="dot"></span></button>
-    <button class="platform-tab" data-platform="IOS">iOS<span class="dot"></span></button>
-    <button class="platform-tab" data-platform="ANDROID">Android<span class="dot"></span></button>
-  </div>
-</div>
-
-<!-- Filter -->
-<div class="filter-bar">
-  <div class="search-wrap">
-    <svg class="search-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
-      <circle cx="5" cy="5" r="3.5" stroke="currentColor" stroke-width="1.3"/>
-      <line x1="7.7" y1="7.7" x2="10.5" y2="10.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-    </svg>
-    <input class="search-input" id="search-input" type="text" placeholder="Filter variables by name or group…">
-  </div>
+  <button class="refresh-btn" id="refresh-btn" title="Refresh variables">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+  </button>
 </div>
 
 <!-- Bulk pattern -->
 <div class="bulk-bar">
   <div class="bulk-label">Bulk pattern</div>
-  <div class="bulk-row">
-    <input class="bulk-input" id="bulk-input" type="text" placeholder="e.g.  var(--{kebab})  ·  Color.{pascal}  ·  R.color.{snake}">
-    <button class="bulk-apply-btn" id="bulk-apply-btn">Apply to filtered</button>
+  <div class="platform-selector">
+    <button class="platform-btn active" data-platform="WEB">Web</button>
+    <button class="platform-btn" data-platform="iOS">iOS</button>
+    <button class="platform-btn" data-platform="ANDROID">Android</button>
   </div>
-  <div class="tokens">
-    <span class="token" data-token="{name}"    title="Full path: Colors/Primary/500">{name}</span>
-    <span class="token" data-token="{kebab}"   title="kebab-case: colors-primary-500">{kebab}</span>
-    <span class="token" data-token="{camel}"   title="camelCase: colorsPrimary500">{camel}</span>
-    <span class="token" data-token="{pascal}"  title="PascalCase: ColorsPrimary500">{pascal}</span>
-    <span class="token" data-token="{snake}"   title="snake_case: colors_primary_500">{snake}</span>
-    <span class="token" data-token="{UPPER}"   title="UPPER_CASE: COLORS_PRIMARY_500">{UPPER}</span>
-    <span class="token" data-token="{last}"    title="Last segment only: 500">{last}</span>
+  <div class="mode-tabs">
+    <button class="mode-tab active" data-mode="standard">Standard</button>
+    <button class="mode-tab" data-mode="custom">Custom</button>
   </div>
+  <!-- Standard panel -->
+  <div id="standard-panel">
+    <div class="standard-preview" id="standard-preview"></div>
+    <div class="affix-row">
+      <input class="affix-input" id="prefix-input" type="text" placeholder="Prefix">
+      <input class="affix-input" id="suffix-input" type="text" placeholder="Suffix">
+      <button class="bulk-apply-btn" id="bulk-apply-btn">Apply to filtered</button>
+    </div>
+  </div>
+  <!-- Custom panel -->
+  <div id="custom-panel" class="hidden">
+    <div class="bulk-row">
+      <input class="bulk-input" id="bulk-input" type="text" placeholder="e.g.  var(--{kebab})  ·  Color.{pascal}  ·  R.color.{snake}">
+      <button class="bulk-apply-btn" id="bulk-apply-btn-custom">Apply to filtered</button>
+    </div>
+    <div class="tokens">
+      <span class="token" data-token="{name}"   title="Full path: Colors/Primary/500">{name}</span>
+      <span class="token" data-token="{kebab}"  title="kebab-case: colors-primary-500">{kebab}</span>
+      <span class="token" data-token="{camel}"  title="camelCase: colorsPrimary500">{camel}</span>
+      <span class="token" data-token="{pascal}" title="PascalCase: ColorsPrimary500">{pascal}</span>
+      <span class="token" data-token="{snake}"  title="snake_case: colors_primary_500">{snake}</span>
+      <span class="token" data-token="{UPPER}"  title="UPPER_CASE: COLORS_PRIMARY_500">{UPPER}</span>
+      <span class="token" data-token="{last}"   title="Last segment only: 500">{last}</span>
+    </div>
+  </div>
+</div>
+
+<!-- Table search -->
+<div class="table-search-row">
+  <svg class="search-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+    <circle cx="5" cy="5" r="3.5" stroke="currentColor" stroke-width="1.3"/>
+    <line x1="7.7" y1="7.7" x2="10.5" y2="10.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+  </svg>
+  <input class="search-input" id="search-input" type="text" placeholder="Filter by name or group…">
 </div>
 
 <!-- List header -->
 <div class="var-list-header">
-  <span>Name</span>
   <span>Type</span>
-  <span id="platform-col-header">Web Syntax</span>
+  <span>Name</span>
+  <span>Web</span>
+  <span>iOS</span>
+  <span>Android</span>
 </div>
 
 <!-- Variable list -->
@@ -483,8 +677,15 @@
 
 <!-- Status bar -->
 <div class="status-bar">
+  <div class="status-left">
+    <button class="clear-btn" id="clear-btn">Clear all syntax</button>
+    <button class="undo-btn" id="undo-btn" style="display:none">↩ Undo</button>
+  </div>
   <span class="status-text" id="status-text">—</span>
-  <button class="apply-btn" id="apply-btn" disabled>Apply Changes</button>
+  <div class="status-right">
+    <button class="reset-btn" id="reset-btn" style="display:none">Reset</button>
+    <button class="apply-btn" id="apply-btn" disabled>Apply Changes</button>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -497,6 +698,9 @@ const state = {
   selectedCollectionId: 'all',
   platform: 'WEB',
   search: '',
+  mode: 'standard',
+  prefix: '',
+  suffix: '',
   bulkPattern: '',
   // edits[varId][platform] = pending value
   edits: {},
@@ -504,7 +708,38 @@ const state = {
   originals: {},
   loading: true,
   applying: false,
+  history: null, // snapshot of edits before last destructive op
 };
+
+// ── Standard conventions ───────────────────────────────────────────────────
+
+const STANDARDS = {
+  WEB:     { before: 'var(--', token: 'kebab', after: ')' },
+  iOS:     { before: 'Color.', token: 'camel', after: '' },
+  ANDROID: { before: 'R.color.', token: 'snake', after: '' },
+};
+
+const TOKEN_FNS = { kebab: toKebab, camel: toCamel, snake: toSnake };
+
+function getEffectivePattern() {
+  if (state.mode === 'custom') return state.bulkPattern;
+  const std = STANDARDS[state.platform];
+  return `${std.before}${state.prefix}{${std.token}}${state.suffix}${std.after}`;
+}
+
+function updateStandardPreview() {
+  const el = document.getElementById('standard-preview');
+  if (!el) return;
+  const std = STANDARDS[state.platform];
+  const example = getFilteredVariables()[0]?.name || 'token-name';
+  const tokenValue = TOKEN_FNS[std.token](example);
+  el.innerHTML =
+    `<span class="preview-static">${esc(std.before)}</span>` +
+    (state.prefix ? `<span class="preview-affix">${esc(state.prefix)}</span>` : '') +
+    `<span class="preview-token">${esc(tokenValue)}</span>` +
+    (state.suffix ? `<span class="preview-affix">${esc(state.suffix)}</span>` : '') +
+    (std.after ? `<span class="preview-static">${esc(std.after)}</span>` : '');
+}
 
 // ── Name transformers ──────────────────────────────────────────────────────
 
@@ -579,7 +814,7 @@ function getPlatformDirtyCount(platform) {
 function getTotalDirtyCount() {
   let n = 0;
   for (const varId of Object.keys(state.edits)) {
-    for (const p of ['WEB', 'IOS', 'ANDROID']) {
+    for (const p of ['WEB', 'iOS', 'ANDROID']) {
       if (isDirty(varId, p)) n++;
     }
   }
@@ -600,6 +835,13 @@ function getFilteredVariables() {
 }
 
 // ── Rendering ─────────────────────────────────────────────────────────────
+
+const TYPE_ICONS = {
+  FLOAT:   `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="9" y2="9"/><line x1="4" x2="20" y1="15" y2="15"/><line x1="10" x2="8" y1="3" y2="21"/><line x1="16" x2="14" y1="3" y2="21"/></svg>`,
+  BOOLEAN: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="3"/><rect width="20" height="14" x="2" y="5" rx="7"/></svg>`,
+  STRING:  `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 16 2.536-7.328a1.02 1.02 0 0 1 1.928 0L22 16"/><path d="M15.697 14h5.606"/><path d="m2 16 4.039-9.69a.5.5 0 0 1 .923 0L11 16"/><path d="M3.304 13h6.392"/></svg>`,
+  COLOR:   `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/></svg>`,
+};
 
 function esc(str) {
   return String(str)
@@ -629,26 +871,29 @@ function renderList() {
 
   let html = '';
   for (const v of vars) {
-    const val = getCurrentValue(v.id, state.platform);
-    const dirty = isDirty(v.id, state.platform);
     const segs = v.name.split('/');
     const last = segs.pop();
     const prefix = segs.length ? segs.join('/') + '/' : '';
 
-    html += `<div class="var-row" data-id="${esc(v.id)}">
+    const syntaxInputs = ['WEB', 'iOS', 'ANDROID'].map(p => {
+      const val = getCurrentValue(v.id, p);
+      const dirty = isDirty(v.id, p);
+      return `<input
+        class="syntax-input${dirty ? ' dirty' : ''}"
+        type="text"
+        value="${esc(val)}"
+        placeholder="—"
+        data-id="${esc(v.id)}"
+        data-platform="${p}"
+      >`;
+    }).join('');
+
+    html += `<div class="var-row">
+      <div><span class="type-badge type-${esc(v.resolvedType)}" title="${v.resolvedType === 'FLOAT' ? 'Number' : v.resolvedType.charAt(0) + v.resolvedType.slice(1).toLowerCase()}">${TYPE_ICONS[v.resolvedType] || esc(v.resolvedType)}</span></div>
       <div class="var-name" title="${esc(v.name)}">
         <span class="var-name-path">${esc(prefix)}</span>${esc(last)}
       </div>
-      <div><span class="type-badge type-${esc(v.resolvedType)}">${esc(v.resolvedType)}</span></div>
-      <div>
-        <input
-          class="syntax-input${dirty ? ' dirty' : ''}"
-          type="text"
-          value="${esc(val)}"
-          placeholder="Not set"
-          data-id="${esc(v.id)}"
-        >
-      </div>
+      ${syntaxInputs}
     </div>`;
   }
 
@@ -671,17 +916,15 @@ function updateStatus() {
   applyBtn.disabled = total === 0 || state.applying;
   applyBtn.textContent = state.applying ? 'Applying…' : 'Apply Changes';
 
-  // Update platform tab dots
-  document.querySelectorAll('.platform-tab').forEach(tab => {
-    const p = tab.dataset.platform;
-    tab.classList.toggle('has-changes', getPlatformDirtyCount(p) > 0);
-  });
+  const resetBtn = document.getElementById('reset-btn');
+  resetBtn.style.display = (total > 0 && !state.applying) ? '' : 'none';
+
+  document.getElementById('clear-btn').disabled = state.applying;
+
+  const undoBtn = document.getElementById('undo-btn');
+  undoBtn.style.display = (state.history && !state.applying) ? '' : 'none';
 }
 
-function updatePlatformHeader() {
-  const labels = { WEB: 'Web Syntax', IOS: 'iOS Syntax', ANDROID: 'Android Syntax' };
-  document.getElementById('platform-col-header').textContent = labels[state.platform];
-}
 
 function showToast(msg, type = '') {
   const el = document.getElementById('toast');
@@ -698,14 +941,33 @@ document.getElementById('collection-select').addEventListener('change', e => {
   renderList();
 });
 
-document.querySelectorAll('.platform-tab').forEach(btn => {
+document.querySelectorAll('.platform-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     state.platform = btn.dataset.platform;
-    document.querySelectorAll('.platform-tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.platform-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    updatePlatformHeader();
-    renderList();
+    updateStandardPreview();
   });
+});
+
+document.querySelectorAll('.mode-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    state.mode = btn.dataset.mode;
+    document.querySelectorAll('.mode-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('standard-panel').classList.toggle('hidden', state.mode !== 'standard');
+    document.getElementById('custom-panel').classList.toggle('hidden', state.mode !== 'custom');
+  });
+});
+
+document.getElementById('prefix-input').addEventListener('input', e => {
+  state.prefix = e.target.value;
+  updateStandardPreview();
+});
+
+document.getElementById('suffix-input').addEventListener('input', e => {
+  state.suffix = e.target.value;
+  updateStandardPreview();
 });
 
 document.getElementById('search-input').addEventListener('input', e => {
@@ -730,27 +992,64 @@ document.getElementById('bulk-input').addEventListener('input', e => {
   state.bulkPattern = e.target.value;
 });
 
-document.getElementById('bulk-apply-btn').addEventListener('click', () => {
-  if (!state.bulkPattern) return;
+function applyBulkPattern() {
+  const pattern = getEffectivePattern();
+  if (!pattern) return;
   for (const v of getFilteredVariables()) {
-    setEdit(v.id, state.platform, applyPattern(v.name, state.bulkPattern));
+    setEdit(v.id, state.platform, applyPattern(v.name, pattern));
   }
   renderList();
-});
+}
+
+document.getElementById('bulk-apply-btn').addEventListener('click', applyBulkPattern);
+document.getElementById('bulk-apply-btn-custom').addEventListener('click', applyBulkPattern);
 
 // Inline edits via event delegation
 document.getElementById('var-list').addEventListener('input', e => {
   if (!e.target.classList.contains('syntax-input')) return;
   const varId = e.target.dataset.id;
-  setEdit(varId, state.platform, e.target.value);
-  e.target.classList.toggle('dirty', isDirty(varId, state.platform));
+  const platform = e.target.dataset.platform;
+  setEdit(varId, platform, e.target.value);
+  e.target.classList.toggle('dirty', isDirty(varId, platform));
   updateStatus();
+});
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  for (const varId of Object.keys(state.edits)) {
+    state.edits[varId] = { ...state.originals[varId] };
+  }
+  state.history = null;
+  renderList();
+  updateStatus();
+  showToast('All changes reset');
+});
+
+document.getElementById('clear-btn').addEventListener('click', () => {
+  const vars = getFilteredVariables();
+  if (!vars.length) return;
+  // Snapshot before clearing
+  state.history = JSON.parse(JSON.stringify(state.edits));
+  for (const v of vars) {
+    state.edits[v.id] = { WEB: '', iOS: '', ANDROID: '' };
+  }
+  renderList();
+  updateStatus();
+  showToast(`Cleared syntax for ${vars.length} variable${vars.length !== 1 ? 's' : ''}`);
+});
+
+document.getElementById('undo-btn').addEventListener('click', () => {
+  if (!state.history) return;
+  state.edits = state.history;
+  state.history = null;
+  renderList();
+  updateStatus();
+  showToast('Undone');
 });
 
 document.getElementById('apply-btn').addEventListener('click', () => {
   const changes = [];
   for (const varId of Object.keys(state.edits)) {
-    for (const platform of ['WEB', 'IOS', 'ANDROID']) {
+    for (const platform of ['WEB', 'iOS', 'ANDROID']) {
       if (!isDirty(varId, platform)) continue;
       changes.push({ id: varId, platform, value: state.edits[varId][platform] });
     }
@@ -771,13 +1070,14 @@ window.onmessage = (event) => {
   if (msg.type === 'DATA') {
     state.collections = msg.collections;
     state.loading = false;
+    document.getElementById('refresh-btn').classList.remove('spinning');
 
     // Build originals map
     for (const col of msg.collections) {
       for (const v of col.variables) {
         state.originals[v.id] = {
           WEB:     (v.codeSyntax && v.codeSyntax.WEB)     || '',
-          IOS:     (v.codeSyntax && v.codeSyntax.IOS)     || '',
+          iOS:     (v.codeSyntax && v.codeSyntax.iOS)     || '',
           ANDROID: (v.codeSyntax && v.codeSyntax.ANDROID) || '',
         };
       }
@@ -793,6 +1093,7 @@ window.onmessage = (event) => {
     }
 
     renderList();
+    updateStandardPreview();
   }
 
   if (msg.type === 'DONE') {
@@ -807,7 +1108,12 @@ window.onmessage = (event) => {
     }
     state.edits = {};
 
-    showToast(`✓ Updated ${msg.count} variable${msg.count !== 1 ? 's' : ''}`, 'success');
+    if (msg.errors && msg.errors.length > 0) {
+      showToast(`Updated ${msg.count}, ${msg.errors.length} failed — check console`, 'error');
+      msg.errors.forEach(e => console.warn(`[Variable Syntax] ${e.platform} on ${e.name}: ${e.reason}`));
+    } else {
+      showToast(`✓ Updated ${msg.count} variable${msg.count !== 1 ? 's' : ''}`, 'success');
+    }
     renderList();
   }
 
@@ -820,7 +1126,17 @@ window.onmessage = (event) => {
 
 // ── Init ───────────────────────────────────────────────────────────────────
 
-parent.postMessage({ pluginMessage: { type: 'INIT' } }, '*');
+updateStandardPreview();
+function requestLoad() {
+  const btn = document.getElementById('refresh-btn');
+  btn.classList.add('spinning');
+  state.loading = true;
+  parent.postMessage({ pluginMessage: { type: 'INIT' } }, '*');
+}
+
+document.getElementById('refresh-btn').addEventListener('click', requestLoad);
+
+requestLoad();
 </script>
 </body>
 </html>
